@@ -3,6 +3,36 @@
 import Vue from 'vue'
 import App from './App'
 
+//导入网络请求包
+import{ $http }from '@escook/request-miniprogram'
+//挂载到顶级对象上
+uni.$http = $http
+
+// 挂载一个请求拦截器
+$http.beforeRequest = function(options){
+	uni.showLoading({
+		title:'加载中……'
+	})
+}
+
+$http.afterRequest = function(){
+	//响应拦截器
+	uni.hideLoading()
+}
+
+//封装弹窗提示消息方法
+uni.$showMsg = function(title='数据请求失败！' ,duration = 1500){
+	uni.showToast({
+		title,
+		duration,
+		icon:'none'
+	})
+}
+
+
+//请求的根路径
+$http.baseUrl = 'http://api-ugo-web.itheima.net'
+
 Vue.config.productionTip = false
 
 App.mpType = 'app'
