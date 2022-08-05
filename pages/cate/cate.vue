@@ -1,5 +1,7 @@
 <template>
 	<view>
+		<!-- 使用自定义的搜索组件 -->
+		<my-search  @click="gotoSearch" :bgc="'#bfa'"  ></my-search>
 		<view class="scroll-view-container">
 			<!-- 左侧滑动区域 -->
 			<scroll-view scroll-y="true" :style="{height: wh + 'px'}" class="left-scroll-view">
@@ -49,7 +51,7 @@
 		onLoad() {
 			const sysinfo = uni.getSystemInfoSync()
 			console.log(sysinfo)
-			this.wh = sysinfo.windowHeight
+			this.wh = sysinfo.windowHeight - 50
 			this.getCateList()
 			
 		},
@@ -78,8 +80,13 @@
 				uni.navigateTo({
 					url:'/subpkg/goods_list/goods_list?cid='+ item.cat_id
 				})
-			}
+			},
+			gotoSearch(){
+				uni.navigateTo({
+					url:'/subpkg/search/search'
+				})
 		}
+	},
 	}
 	
 </script>
