@@ -31,7 +31,7 @@ uni.$showMsg = function(title='数据请求失败！' ,duration = 1500){
 
 
 //请求的根路径
-$http.baseUrl = 'http://api-ugo-web.itheima.net'
+$http.baseUrl = 'https://api-ugo-web.itheima.net'
 
 Vue.config.productionTip = false
 
