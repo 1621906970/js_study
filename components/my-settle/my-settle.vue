@@ -11,7 +11,7 @@
 		</view>
 		
 		<!-- 结算按钮 -->
-		<view class="btn-settle">
+		<view class="btn-settle" @click="settlement">
 			结算（{{checkedCount}}）
 		</view>
 	
@@ -19,16 +19,21 @@
 </template>
 
 <script>
-	import {mapGetters,mapMutations} from 'vuex'
+	import {mapGetters,mapMutations,mapState} from 'vuex'
 	export default {
 		name:"my-settle",
 		data() {
 			return {
+				//倒计时默认秒数
+				seconds:3,
 				
+				timer:null
 			};
 		},
 		computed:{
+			...mapGetters('m_user',['addstr']),
 			...mapGetters('m_cart',['checkedCount','total','checkedGoodsAmount']),
+			...mapState('m_user',['token']),
 			isFullCheck(){
 				return this.total === this.checkedCount
 			}
@@ -38,6 +43,38 @@
 			changeAllState(){
 				// console.log();
 				this.updateAllGoodsState(!this.isFullCheck)
+			},
+			settlement(){
+				// 进行结算判断 结算按钮
+				if(!this.checkedCount) return uni.$showMsg('请选择结算的商品O(∩_∩)O')
+				if(!this.addstr) return uni.$showMsg('请选择收货地址O(∩_∩)O')
+				if(this.token) return this.delayNavigate()
+			},
+			// 展示倒计时提示消息
+			showTips(n){
+				uni.showToast({
+					icon:'none',
+					title:'请登录后再结算！'+n+ '秒之后自动跳转到登录页',
+					mask:true,
+					duration:1500
+				})
+			},
+			// 延时导航到my登陆姐买你
+			delayNavigate(){
+				this.seconds = 3
+				this.showTips(this.seconds)
+				
+			   this.timer =setInterval(() => {
+					this.seconds--
+					if(this.seconds <= 0){
+						clearInterval(this.timer)
+						uni.switchTab({
+							url:'/pages/My/My'
+						})
+					}
+					
+					this.showTips(this.seconds)
+				},1000)
 			}
 		}
 	}
